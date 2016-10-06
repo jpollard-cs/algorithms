@@ -1,4 +1,4 @@
-import { quickSort, pureQuickSort, mergeSort, insertionSort, quickSelect } from '../lib/sort';
+import { quickSort, pureQuickSort, mergeSort, insertionSort, quickSelect, threeWayQuickSort } from '../lib/sort';
 
 
 test('mergeSort returns a sorted array', () => {
@@ -21,6 +21,13 @@ test('pureQuickSort returns a sorted array', () => {
     const sortedArray = [1,5,6,8,8,9,12,42,100];
     expect(pureQuickSort(inputArray)).toEqual(sortedArray);
 });
+
+// test('threeWayQuickSort returns a sorted array', () => {
+//     let inputArray = [8,3,3,4,3,2,2,8,3,4,4,5,1,8,8,4];
+//     let sortedArray = [1,2,2,3,3,3,3,4,4,4,4,5,8,8,8,8];
+//     threeWayQuickSort(inputArray);
+//     expect(inputArray).toEqual(sortedArray);
+// });
 
 test('insertionSort returns a sorted array', () => {
     let inputArray = [8,9,5,6,8,1,12,100,42];
