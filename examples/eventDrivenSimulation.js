@@ -3,6 +3,11 @@
 
 import { MaxPriorityQueue } from '../lib/heaps';
 
+/**
+ * random generator for numbers between 0 and -1
+ */
+const generateSign = () => Math.floor(Math.random()*2) == 1 ? 1 : -1;
+
 const Particle = {
     init: function(id, canvasWidth, canvasHeight, rx, ry, vx, vy, radius, mass, color) {
         this.id = id; // identity
@@ -17,29 +22,25 @@ const Particle = {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
 
-        // TODO: numbers might need to be between and 1 then might need to project to get to work
-        // rx     = StdRandom.uniform(0.0, 1.0);
-        // ry     = StdRandom.uniform(0.0, 1.0);
-        // vx     = StdRandom.uniform(-0.005, 0.005);
-        // vy     = StdRandom.uniform(-0.005, 0.005);
+        //NOTE: for now we're just going to assign values here
 
         //Random position on the canvas
-        this.rx = Math.random() * canvasWidth;
-        this.ry = Math.random() * canvasHeight;
+        this.rx = Math.random();// * canvasWidth;
+        this.ry = Math.random();// * canvasHeight;
 
         //Lets add random velocity to each particle
-        this.vx = Math.random() * 20 - 10;
-        this.vy = Math.random() * 20 - 10;
+        this.vx = Math.random() * 0.005 * generateSign();
+        this.vy = Math.random() * 0.005 * generateSign();
+
+        //Random size
+        this.radius = 0.01;
+        this.mass = 0.5;
 
         //Random colors
         const r = Math.random()*255>>5; // let's get closer to the blue/green spectrum
         const g = Math.random()*255>>0;
         const b = Math.random()*255>>0;
         this.color = "rgba("+r+", "+g+", "+b+", 0.5)";
-
-        //Random size
-        this.radius = Math.random()*20+20;
-        this.mass = Math.random()*20+20;
     },
     move: function(dt) {
         // if ((this.rx + this.vx * dt < this.radius) || (this.rx + this.vx * dt > 1.0 - this.radius)) { this.vx = -this.vy; }
@@ -51,7 +52,7 @@ const Particle = {
         ctx.beginPath();
 
         //Time for some colors
-        const gradient = ctx.createRadialGradient(this.rx, this.ry, 0, this.rx, this.ry, this.radius);
+        const gradient = ctx.createRadialGradient(this.rx * this.canvasWidth, this.ry * this.canvasHeight, 0, this.rx * this.canvasWidth, this.ry * this.canvasHeight, this.radius);
         gradient.addColorStop(0, "white");
         gradient.addColorStop(0.4, this.color);
         gradient.addColorStop(1, "black");
@@ -81,12 +82,12 @@ const Particle = {
         return -(dvdr + Math.sqrt(d)) / dvdv;
     },
     timeToHitVerticalWall: function() {
-        if      (this.vx > 0) { return (this.canvasWidth - this.rx - this.radius) / this.vx; }
+        if      (this.vx > 0) { return (this.rx - this.radius) / this.vx; }
         else if (this.vx < 0) { return (this.radius - this.rx) / this.vx; }
         else                  { return Infinity; }
     },
     timeToHitHorizontalWall: function() {
-        if      (this.vy > 0) { return (this.canvasHeight - this.ry - this.radius) / this.vy; }
+        if      (this.vy > 0) { return (this.ry - this.radius) / this.vy; }
         else if (this.vy < 0) { return (this.radius - this.ry) / this.vy; }
         else                  { return Infinity; }
     },
